@@ -57,3 +57,32 @@ size_t DSString::length() const{
 char &DSString::operator[](size_t ind){
     return data[ind]; //returns reference to a character at index
 }
+
+char &DSString::operator[](size_t ind) const{
+    if(ind >= this->length()){
+        throw out_of_range("Index out of bounds");
+    }
+    return data[ind];  //returns reference to a character at index (const)
+}
+ 
+ 
+/**
+     * s1 = s2;
+     * 1.check if s1 is s2, then do nothing if it is
+     * 2.allocate memory again, big enough to store s2
+     * 3.delete s1 from memory
+     * 4.copy to new memory, assign pointer to s1 data
+     * 5.fix len for s1
+    */
+DSString &DSString::operator=(const DSString &rhs) {
+  if (this != &rhs) {              //check if data is equal to rhs, do nothing if it is
+    delete[] data;
+    len = rhs.len;
+    data = new char[len + 1];
+    for(size_t i = 0; i < len; i++){//loops through c
+        data[i] = rhs[i];           //takes element at i of c and copies it into data array 
+    }
+    data[len] = '\0';
+  }
+  return *this;
+}
