@@ -86,3 +86,62 @@ DSString &DSString::operator=(const DSString &rhs) {
   }
   return *this;
 }
+
+/**
+     * appends the string to this string
+     * 1.create a new string with the length of both combined + 1 (for terminator)
+     * 2.loop through both strings to append char at the indeces to the new string
+     * 3.return the new string
+    */
+DSString DSString::operator+(const DSString &rhs) const{
+    size_t newLen = len + rhs.len;
+    char* together = new char[newLen+1];               //created with the length of both combined + 1 (terminator)
+    for(size_t ind = 0; ind < len; ind++){             //loop through data 
+        together[ind] = data[ind];                     //add data to the first part of together
+    }
+    for(size_t rhsInd = 0; rhsInd < rhs.len; rhsInd++){//loop through rhs
+        together[rhsInd + len] = rhs[rhsInd];          //add rhs to the second part of together (index rhsInd(0) + length of rhs insert the string)
+    }
+    together[newLen] = '\0';                           //terminator at end
+    DSString concStr(together);                        //create a DSString with the new concatenated string
+    delete[] together;                                 //deallocate memory for together
+    return concStr;                                    // return new DSString
+}
+ 
+/**
+ * if original string is equal to new string return true else return false
+ * 1.loop through the first string
+ * 2.if theres a char that does not match with the right hand side, return false and end loop
+ * 3.if all values match, return true
+*/
+bool DSString::operator==(const DSString &rhs) const{
+    if(len != rhs.len){             //if the lens don't match up it is automatically false as a string cannot be equals to another if the lengths are not the same
+        return false;
+    }
+    for(size_t i = 0; i < len; i++){//loop through the string
+        if(data[i] != rhs[i]){      //if theres a char in any of the strings that don't match up, return false
+            return false;
+        }
+    }
+    return true;                    //else, all characters match in the string, so return true
+ 
+}
+ 
+ 
+/**
+ * checks if string is less than new string 
+ * 1.loops through strings using min in case one is longer than the other
+ * 2.if original string is greater than, automatically return true
+ * 3.if the original is less than the new, return true
+*/
+bool DSString::operator<(const DSString &rhs) const{
+    for(size_t i = 0; i < std::min(len, rhs.len); i++){//loop through the strings
+        if(data[i] > rhs[i]){                          //false if data is greater than the rhs at index i 
+            return false;
+        }
+        if(data[i] < rhs[i]){                          //true if data is less than rhs at index i 
+            return true;
+        }
+    }
+    return len < rhs.len;
+}
