@@ -44,3 +44,16 @@ DSString::DSString(const DSString &rhs){
     }
     data[len] = '\0';
 }
+
+DSString::~DSString(){
+    delete[] data;     //deallocates memory pointed to by data pointer, whole length gets deleted
+}
+ 
+ 
+size_t DSString::length() const{
+    return len;  //getter returns length
+}
+ 
+char &DSString::operator[](size_t ind){
+    return data[ind]; //returns reference to a character at index
+}
