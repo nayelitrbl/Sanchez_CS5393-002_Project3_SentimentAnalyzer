@@ -1,5 +1,5 @@
 #include "DSString.h"
-
+ 
 /* 
  * Implement the functions defined in DSString.h. You may add more functions as needed
  * for the project. 
@@ -8,7 +8,6 @@
  * but your class should store its length in a member variable. 
  * DO NOT USE C-STRING FUNCTIONS <string.h> or <cstring>.
  */  
-
 //data is a pointer to a character array that contains the string with a \0 terminator
  
 DSString::DSString() : data{nullptr}{
@@ -16,7 +15,7 @@ DSString::DSString() : data{nullptr}{
     data[0] = '\0';    //since data is null the first element will be the terminator symbol
     len = 0;
 }
-
+ 
 DSString::DSString(const char *c){
     if(c == nullptr || *c == '\0'){     //if data is emptry 
         data = new char[1];             //creates data as an array of characters with len of 1
@@ -24,7 +23,10 @@ DSString::DSString(const char *c){
         len = 0;
     }
     else{
-        len = strlen(c);
+        len = 0;
+        while(c[len] != '\0'){
+            len++;
+        }
         data = new char[len + 1];
         for(size_t i = 0; i < len; i++){ //loops through c
             data[i] = c[i];             //takes element at i of c and copies it into data array 
@@ -42,7 +44,7 @@ DSString::DSString(const DSString &rhs){
     }
     data[len] = '\0';
 }
-
+ 
 DSString::~DSString(){
     delete[] data;     //deallocates memory pointed to by data pointer, whole length gets deleted
 }
@@ -55,6 +57,7 @@ size_t DSString::length() const{
 char &DSString::operator[](size_t ind){
     return data[ind]; //returns reference to a character at index
 }
+ 
 
 char &DSString::operator[](size_t ind) const{
     if(ind >= this->length()){
@@ -84,7 +87,7 @@ DSString &DSString::operator=(const DSString &rhs) {
   }
   return *this;
 }
-
+ 
 /**
      * appends the string to this string
      * 1.create a new string with the length of both combined + 1 (for terminator)
