@@ -145,3 +145,129 @@ bool DSString::operator<(const DSString &rhs) const{
     }
     return len < rhs.len;
 }
+
+/**
+ * gets new string (substring) from string
+ * 1.create a new string that will hold the substring with the len numChars+1 (terminator)
+ * 2.loop through original string and get indeces until numChars
+ * 3.at the start of substring add the characters at the index start and after until numChars is reached
+ * 4.return the new string which is now a substring from the original string 
+*/
+DSString DSString::substring(size_t start, size_t numChars) const{   //change for loop to simple vers.      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Need to check if start + numChars is out of bounds
+    size_t length = this->length();
+
+    if(start >= length && (start + numChars) > length){
+        throw out_of_range("Index is out of bounds");
+    }
+
+    char* ss = new char[numChars+1]; 
+    for(size_t i = 0; i < numChars; i++){//loops for the amount of chars in ss
+        ss[i] = data[i+start];           //at index i, copy in data at index i + start 
+    }
+    ss[numChars] = '\0';                //at the end of ss (given by numChars) add the terminator
+    DSString subString(ss);             //creates a DSString with the substring from the original string
+    delete[] ss;                        //deallocates memory for ss
+    return subString;                   //returns DSString subString
+}
+ 
+ 
+/**
+     * to ascii -> take dec. and +32 to get lowercase from upper case if >=65 and <=90
+     * A - Z : 65 - 90    (diff of 32 for lowercase letters)
+     * 1.create new string for lower case string with len+1 (terminator)
+     * 2.loop through original string, enter if loop
+     * 3.if the ascii number is greater than or equal to 65 or less than or equal to 90 add 32 to get new ascii number  if(ascii >= 65 || ascii <= 90)
+     * 4.else the same ascii number will be used (account for special characters - not letters)
+     * 5.at index i of the new string, add the character based on result of if loop
+     * 6. return the new string 
+    */
+DSString DSString::toLower() const{ // look at the ASCII table for this
+   char* lower = new char[len+1];   //create new string which will be in lower case
+   for(size_t i = 0; i < len; i++){ //loop through the original string
+        char c = data[i];           //set c to the char at the index
+        if(c >= 'A' && c <= 'Z'){   //if ascii value shows that it is A - Z (uppercase)
+            lower[i] = c + 32;      //add 32 to ascii value to make it lower case
+        }
+        else{
+            lower[i] = c;           //returns the same char if it is not uppercase
+        }
+   }
+   lower[len] = '\0';               //set end to terminator
+   DSString lowerCase(lower);       //create DSString with lowercase characters
+   delete[] lower;                  //deallocates memory for lower
+   return lowerCase;                //returns DSString lowerCase
+} 
+ 
+char* DSString::c_str() const{
+    return data;        //returns pointer
+}
+ 
+ 
+/**
+     * overloading insertion operator, how the string will be printed with ostream
+    */
+std::ostream &operator<<(std::ostream &os, const DSString &str) {
+    os << str.data; //str in ostream os, for loop ?
+    return os;      //returns the ostream 
+}
+ 
+/**
+ * Tokenize function:
+ * Loops through the sentence to separate into words
+ * Once a new DSString is made with the word only, add the DSString to a vector. Make sure the special chars are removed to 
+ * make the words the only thing in the vector by using ascii values. Use toLower to make all the words the same and not get duplicate words.
+ * Ascii A - Z : 65 - 90    (+32 for lowercase letters)
+ 
+*/
+std::vector<DSString> DSString::tokenize(DSString str){
+    std::vector<DSString> token;                //creates a vector of DSStrings
+    std::string temp = "";                      //empty string for the word to be put into
+    DSString dsToken;                           //create DSString 
+    for (size_t i = 0; i < str.length(); i++) { //loops through the tweet (str)
+        int asciiVal = str[i];                  //gets ascii value for the char at index i 
+        if ((asciiVal >= 65 && asciiVal <= 90) || (asciiVal >= 97 && asciiVal <= 122)) {
+            temp = temp + str[i];               //if the char is a letter a-z or A-Z add to the string
+        }
+        else {                                  //if the char isn't a letter and is not a space
+            if(temp != ""){
+                dsToken = temp.c_str();         //convert string to DSString
+                dsToken = dsToken.toLower();    //make word lowercase to prevent repeated words
+                token.push_back(dsToken);       //add the DSString word (dsToken) to the vector
+                temp = "";                      //reset the string for the next word
+            }
+        }
+    }
+    dsToken = temp.c_str();                     //convert string to DSString
+    dsToken = dsToken.toLower();                //makes the DSString lowercase
+    token.push_back(dsToken);                   //adds the DSString to the vector
+    return token;                               //returns the vector made up of the words
+}
+ 
+ 
+/**
+ * getline function: 
+ * takes in a line into istream in using DSStrings
+ * reference: https://www.programiz.com/cpp-programming/buffer 
+*/
+std::istream& getline(std::istream &in, DSString &str){
+    char *b = new char[10000];  //buffer with a size of 10000
+    in.getline(b, 10000);       //gets the line 
+    str = DSString(b);          //sets the DSString to the line read
+    delete[] b;                 //deallocates memory
+    return in;                  //returns istream in
+}
+ 
+ 
+/**
+ * getline function (3 parameters): 
+ * takes in a line into istream in using DSStrings and accounting for delimiter
+ * reference: https://www.programiz.com/cpp-programming/buffer 
+*/
+std::istream& getline(std::istream &in, DSString &str, char delimiter){
+    char *b = new char[10000];              //buffer with a size of 10000
+    if(in.getline(b, 10000, delimiter)){    //gets the line if the until the delimiter is found
+        str = DSString(b);                  //sets the DSString to the chars up to the delimiter
+    }      
+    delete[] b;                             //deallocates memory
+    return in;                              //returns istream in
+}
