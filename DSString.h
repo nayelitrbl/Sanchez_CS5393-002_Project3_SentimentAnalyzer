@@ -94,13 +94,14 @@ public:
  
     /**
      * custom getline function to take in DSStrings: 
+     * 
     */
-    std::istream& getline(std::istream &in, DSString &str);
+    friend std::istream& getline(std::istream &in, DSString &str);
  
     /**
      * custom getline function that takes in DSStrings and also accounts for a delimiter
     */
-    std::istream& getline(std::istream &in, DSString &str, char delimiter);
+    friend std::istream& getline(std::istream &in, DSString &str, char delimiter);
 };
  
 #endif
