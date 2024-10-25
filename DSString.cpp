@@ -17,16 +17,13 @@ DSString::DSString() : data{nullptr}{
 }
 
 DSString::DSString(const char *c){
-    if(c == nullptr){      //if data is emptry 
-        data = new char[1];//creates data as an array of characters with len of 1
-        data[0] = '\0';    //assigns first element as terminator symbol since it is nullptr
+    if(c == nullptr || *c == '\0'){     //if data is emptry 
+        data = new char[1];             //creates data as an array of characters with len of 1
+        data[0] = '\0';                 //assigns first element as terminator symbol since it is nullptr
         len = 0;
     }
     else{
-        len = 0;
-        while(c[len] != '\0'){
-            len++;
-        }
+        len = strlen(c);
         data = new char[len + 1];
         for(size_t i = 0; i < len; i++){ //loops through c
             data[i] = c[i];             //takes element at i of c and copies it into data array 
@@ -153,10 +150,8 @@ bool DSString::operator<(const DSString &rhs) const{
  * 3.at the start of substring add the characters at the index start and after until numChars is reached
  * 4.return the new string which is now a substring from the original string 
 */
-DSString DSString::substring(size_t start, size_t numChars) const{   //change for loop to simple vers.      //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Need to check if start + numChars is out of bounds
-    size_t length = this->length();
-
-    if(start >= length && (start + numChars) > length){
+DSString DSString::substring(size_t start, size_t numChars) const{   //change for loop to simple vers.
+    if(start >= len || (start + numChars) > len){
         throw out_of_range("Index is out of bounds");
     }
 
@@ -169,7 +164,6 @@ DSString DSString::substring(size_t start, size_t numChars) const{   //change fo
     delete[] ss;                        //deallocates memory for ss
     return subString;                   //returns DSString subString
 }
- 
  
 /**
      * to ascii -> take dec. and +32 to get lowercase from upper case if >=65 and <=90
