@@ -211,33 +211,26 @@ std::ostream &operator<<(std::ostream &os, const DSString &str) {
  
 /**
  * Tokenize function:
- * Loops through the sentence to separate into words
- * Once a new DSString is made with the word only, add the DSString to a vector. Make sure the special chars are removed to 
- * make the words the only thing in the vector by using ascii values. Use toLower to make all the words the same and not get duplicate words.
- * Ascii A - Z : 65 - 90    (+32 for lowercase letters)
- 
+ * add the DSString to a vector. Make sure the special chars are removed to 
+ * make the words the only thing in the vector. Use toLower to make all the 
+ * words the same and not get duplicate words.
 */
 std::vector<DSString> DSString::tokenize(DSString str){
     std::vector<DSString> token;                //creates a vector of DSStrings
-    std::string temp = "";                      //empty string for the word to be put into
-    DSString dsToken;                           //create DSString 
-    for (size_t i = 0; i < str.length(); i++) { //loops through the tweet (str)
-        int asciiVal = str[i];                  //gets ascii value for the char at index i 
-        if ((asciiVal >= 65 && asciiVal <= 90) || (asciiVal >= 97 && asciiVal <= 122)) {
-            temp = temp + str[i];               //if the char is a letter a-z or A-Z add to the string
-        }
-        else {                                  //if the char isn't a letter and is not a space
-            if(temp != ""){
-                dsToken = temp.c_str();         //convert string to DSString
-                dsToken = dsToken.toLower();    //make word lowercase to prevent repeated words
-                token.push_back(dsToken);       //add the DSString word (dsToken) to the vector
-                temp = "";                      //reset the string for the next word
-            }
-        }
+    char* cstr = new char[str.length() + 1];    //allocate c-style string
+    strcpy(cstr, str.c_str());                  //copy DSString to c-string
+    
+    const char* delim = " ,.!?;:\"'()[]{}<>-";  //define delimiters
+    char* word = strtok(cstr, delim);           //get first token
+
+    while(word != nullptr){                     //loop through all tokens
+        DSString dsWord = word;                 //convert c-string token to DSString
+        dsWord = dsWord.toLower();              //convert to lowercase
+        token.push_back(dsWord);                //add to vector
+        word = strtok(nullptr, delim);          //get next token
     }
-    dsToken = temp.c_str();                     //convert string to DSString
-    dsToken = dsToken.toLower();                //makes the DSString lowercase
-    token.push_back(dsToken);                   //adds the DSString to the vector
+    
+    delete[] cstr;
     return token;                               //returns the vector made up of the words
 }
  
