@@ -1,4 +1,7 @@
 #include "DSString.h"
+#include <cstring>
+#include <stdexcept>
+#include <functional>
  
 /* 
  * Implement the functions defined in DSString.h. You may add more functions as needed
@@ -261,4 +264,15 @@ std::istream& getline(std::istream &in, DSString &str, char delimiter){
     }      
     delete[] b;                             //deallocates memory
     return in;                              //returns istream in
+}
+
+/**
+ * Hash function for map with DSString
+*/
+std::size_t DSString::Hash::operator()(const DSString& s) const{
+    std::size_t hashVal = 0; 
+    for(size_t i = 0; i < s.length(); i++){
+        hashVal = hashVal * 31 + s[i];
+    }
+    return hashVal;
 }
