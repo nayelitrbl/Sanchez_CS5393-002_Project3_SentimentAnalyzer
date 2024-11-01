@@ -10,6 +10,7 @@
 #include <vector>
 #include <iostream>
 #include <exception>
+#include <cstddef> 
 
 using namespace std;
 
@@ -40,19 +41,19 @@ public:
  
     size_t length() const; // returns the length of the string
  
-    char &operator[](size_t); // returns a reference to the character at the given index
-    char &operator[](size_t) const;
+    char &operator[](size_t ind); // returns a reference to the character at the given index
+    char &operator[](size_t ind) const;
     /**
      * Overloaded operator+ which appends the string in the argument to this string
      */
-    DSString operator+(const DSString &) const;
+    DSString operator+(const DSString& rhs) const;
  
     /**
      * Standard relational operators to compare and order your strings.
      * Feel free to add additional.
      **/
-    bool operator==(const DSString &) const;
-    bool operator<(const DSString &) const;
+    bool operator==(const DSString& rhs) const;
+    bool operator<(const DSString& rhs) const;
  
     /**
      * The substring method returns a new string object that contains a
@@ -80,7 +81,13 @@ public:
     char *c_str() const;
  
     // a conversion to std::string would also be nice: string string() const;
- 
+
+    std::vector<DSString> tokenize(DSString); //breaks up tweet into separate words
+
+    struct Hash{
+        std::size_t operator()(const DSString& s) const;
+    };
+
     /**
      * Overloaded stream insertion operator to print the contents of this
      * string to the output stream in the first argument. Remember:
@@ -88,20 +95,18 @@ public:
      * a friend because it operates on the stream and not the DSString object.
      **/
     friend std::ostream &operator<<(std::ostream &, const DSString &);
- 
-    std::vector<DSString> tokenize(DSString); //breaks up tweet into separate words
- 
- 
+
     /**
      * custom getline function to take in DSStrings: 
      * 
     */
     friend std::istream& getline(std::istream &in, DSString &str);
- 
+
     /**
      * custom getline function that takes in DSStrings and also accounts for a delimiter
     */
     friend std::istream& getline(std::istream &in, DSString &str, char delimiter);
+
+
 };
- 
 #endif
