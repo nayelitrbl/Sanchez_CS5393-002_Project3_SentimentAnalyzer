@@ -98,7 +98,7 @@ void SentimentClassifier::train() {
 }
 
 void SentimentClassifier::test(const char* actualSenti, const char* results) {
-    // The file with the classifications for the testing tweet data
+    // file with the classifications for the testing tweet data
     std::ifstream actualFile(actualSenti);
     if (!actualFile.is_open()) {
         std::cerr << "Error: Could not open actual sentiment file: " << actualSenti << std::endl;
