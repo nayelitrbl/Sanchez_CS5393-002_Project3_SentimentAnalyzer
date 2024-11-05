@@ -202,6 +202,10 @@ DSString DSString::toLower() const{ // look at the ASCII table for this
 char* DSString::c_str() const{
     return data;        //returns pointer
 }
+
+bool DSString::empty() const {
+    return this->length() == 0;
+}
  
  
 /**
