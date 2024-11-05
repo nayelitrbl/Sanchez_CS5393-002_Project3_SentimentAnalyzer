@@ -84,6 +84,8 @@ public:
 
     std::vector<DSString> tokenize(DSString); //breaks up tweet into separate words
 
+    bool DSString::empty() const;
+
     struct Hash{
         std::size_t operator()(const DSString& s) const;
     };
